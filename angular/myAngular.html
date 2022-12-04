@@ -1,0 +1,212 @@
+<!doctype html>
+<html ng-app = "myApp">
+
+	
+<script src="js/angular.min.js"></script>
+<script src="js/jquery-3.6.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/dirPagination.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
+	
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" />
+<link rel="stylesheet" href="css/w3.css">
+<link rel="stylesheet" href="css/stars.css">
+<link data-require="bootstrap-css@3.1.1" rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+<link rel="stylesheet" href="css/styles.css">
+
+
+<script>
+	function modalShow()
+	{
+		document.getElementById('modal01').style.display='block';
+	}
+	
+	function modalClose()
+	{
+		document.getElementById("modal01").style.display = "none";
+	}
+</script>
+
+<head>
+	<meta charset="utf-8">
+	<title>Test Angular</title>	
+</head>
+
+<body>
+	
+	
+	<!--Modal -->
+	<div id="modal01" class="w3-modal">
+		<div class="w3-modal-content">
+			<div class="w3-container">
+				<span onclick="modalClose()" class="w3-button w3-display-topright">&times;</span>
+				<h4 class="w3-padding">DETAIL KURSUS</h4>
+				
+				<table class="w3-table-all w3-small">
+					<tr>
+						<td>ID</td>
+						<td><input type="text" id="id_input" value="" readonly /></td>
+					</tr>
+					
+					<tr>
+						<td>Nama Kursus</td>
+						<td><input type="text" id="name_input" value="" readonly /></td>
+					</tr>
+					
+					<tr>
+						<td>Deskripsi</td>
+						<td><input type="text" id="desc_input" value="" readonly /></td>
+					</tr>
+					
+					<tr>
+						<td>Author / Website</td>
+						<td>
+							<input type="text" id="author_input" value="" readonly />
+							&nbsp;&nbsp;
+							/
+							&nbsp;&nbsp;
+							<input type="text" id="website_input" value="" readonly />
+						</td>
+					</tr>
+					
+					<tr>
+						<td>Rating / Review</td>
+						<td>
+							<input type="text" id="rating_input" value="" readonly />
+							&nbsp;&nbsp;
+							/
+							&nbsp;&nbsp;
+							<input type="text" id="review_input" value="" readonly />
+						</td>
+					</tr>
+					
+					<tr>
+						<td>Duration / Lesson</td>
+						<td>
+							<input type="text" id="duration_input" value="" readonly />
+							&nbsp;&nbsp;
+							/
+							&nbsp;&nbsp;
+							<input type="text" id="lesson_input" value="" readonly />
+						</td>
+					</tr>
+					
+					<tr>
+						<td>Level</td>
+						<td><input type="text" id="level_input" value="" readonly /></td>
+					</tr>
+					
+					
+					<tr>
+						<td>Price</td>
+						<td><input type="text" id="price_input" value="" readonly /></td>
+					</tr>
+					
+					
+					<tr>
+						<td>Discount Price</td>
+						<td><input type="text" id="discount_price_input" value="" readonly /></td>
+					</tr>
+					
+					<tr>
+						<td>Date Created</td>
+						<td><input type="date" id="date_created_input" value="" readonly /></td>
+					</tr>
+					
+					<tr>
+						<td>Photo</td>
+						<td><img src="/"  width="100" height="100" alt="test"></td>
+					</tr>
+					
+				</table>
+				<br/>
+				<br/>
+			</div>
+		</div>
+	</div>
+	
+	<ion-content>
+	<div class="w3-container" ng-app="angularTable" ng-controller="myCtrl">
+		
+		<h2>Daftar Kursus</h2>
+		
+		<br>
+
+		<form class="form-inline">
+			<div class="form-group">
+				<label >Search</label>
+				<input type="text" ng-model="search" class="form-control" placeholder="Search">
+			</div>
+		</form>
+		
+		<br/>
+		<br/>
+		
+		<input type="checkbox" ng-model="filter_rating" ng-change=""/>
+		<label >Rating lebih dari 4</label>
+		
+		<br/>
+		<br/>
+		
+		<table class="w3-table-all">
+			<thead>
+				<tr>
+					<th>No</th>
+					<th colspan="2">Nama Kursus</th>
+					<th class="sort_class" ng-click="sort('discount_price')">
+						Harga <i class="{{class_sort}}"></i>
+					</th>
+					<th>Option</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				<tr dir-paginate="x in items | orderBy:sortKey:reverse | filter:search | itemsPerPage:5">
+					<td>{{ $index + 1 }}</td>
+					<td><img src="images/{{x.photo}}" width="100" height="100" alt="{{x.desc}}"></td>
+					<td>
+						<b>{{ x.name }}</b> 
+						<br/> 
+						<span style="font-size: 12px; color:#565555">{{x.desc}}</span>
+						<br/>
+						<span style="font-size: 11px; color:#565555">{{x.author}} , {{x.website}}</span>
+						<br/>
+						<span class="stars">
+							<span ng-style="{ 'width': getStars(x.rating) }"></span>
+						</span>
+						<span style="font-size: 11px; color:#565555">({{x.rating}}) / {{checkReview(x.review)}}</span>
+						<br/>
+						<span style="font-size: 11px; color:#565555">{{x.duration}} total jam / {{x.lesson}} pelajaran / {{x.level}}</span>
+						<br/>
+						<span style="font-size: 12px; font-weight: bold; color:blue;">{{checkDate(x.date_created)}}</span> 
+						<span style="font-size: 12px; font-weight: bold; color:green">{{checkSelling(x.review, x.rating)}}</span>
+						<span style="font-size: 12px; font-weight: bold; color:red">{{checkHot(x.date_created, x.review, x.rating)}}</span>
+					</td>
+					<td>
+						<span style="float:right;">{{satuan}} {{ x.discount_price | number : 0 }}</span>
+						<br/>
+						<span style="font-size: 11px; color:#565555; float:right;"><del>{{satuan}} {{ x.price | number : 0 }}</del></span>
+					</td>
+					<td>
+						<span class="wishlist">
+							<i id="wishlist_{{x.id}}" class="{{wishlist}}" style="font-size:20px;color:red;" ng-click="changeWishlist(x.wishlist,x.id)"></i>
+						</span>
+						<button class="w3-button w3-round w3-gray" onclick="modalShow()">Detail</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<dir-pagination-controls 
+			 max-size="5" 
+			 direction-links="true" 
+			 boundary-links="true" >
+		</dir-pagination-controls>
+
+	</div>
+
+	<script type="text/javascript" src="js/myApp.js"></script>
+	</ion-content>
+</body>
+</html>
